@@ -20,4 +20,4 @@ GLM - OpenGL-purposed math library
 Freetype - Font loading and rendering  
 
 ### Known Bugs
-There is a very high chance that the screen is blank or that the camera is centered around a seemingly random point when the application is first started.  If this happens the application must be reopened.  It is not related to the multithreading.  It seems to be a bug in the OpenGL API, possibly due to the multidude of high res textures.  I will continue investigation the cause of this issue.
+There is a chance when the application is first started that the screen is blank or that the camera is centered around a seemingly random point.  If this happens the application must be reopened.  It is not related to the multithreading.  It seems to be a bug in the OpenGL API, possibly due to the multidude of high res textures.  I will continue investigation the cause of this issue.
