@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\graphics">
+      <UniqueIdentifier>{4a39c17c-506a-41d0-826f-e1a9207deebf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\graphics">
+      <UniqueIdentifier>{8d572884-b740-4c13-8cb8-3691b56a568f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\defensesim">
+      <UniqueIdentifier>{35105e1b-e793-4656-8658-24bc7261beac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\defensesim">
+      <UniqueIdentifier>{39215e1b-8400-4184-ab67-605a455fe03b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sim objects">
+      <UniqueIdentifier>{6272b58f-d3d9-44ed-940f-feee37de71d8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="graphics.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="defensesim.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gl3w.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="texture.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="window.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="text.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="depthShadow.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="graphics.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="texture.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="window.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="vertex.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="astrobox.h">
+      <Filter>Header Files\sim objects</Filter>
+    </ClInclude>
+    <ClInclude Include="clouds.h">
+      <Filter>Header Files\sim objects</Filter>
+    </ClInclude>
+    <ClInclude Include="earth.h">
+      <Filter>Header Files\sim objects</Filter>
+    </ClInclude>
+    <ClInclude Include="missile.h">
+      <Filter>Header Files\sim objects</Filter>
+    </ClInclude>
+    <ClInclude Include="projectile_functions.h">
+      <Filter>Header Files\defensesim</Filter>
+    </ClInclude>
+    <ClInclude Include="depthShadow.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shaders\text.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\text.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\model.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\model.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\earth.vs" />
+    <None Include="res\shaders\earth.fs" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,121 @@
+#version 460
+
+layout(vertices = 3) out;
+
+in vec3 vs_position[];
+in vec2 vs_texcoord[];
+in vec3 vs_normal[];
+
+out vec3 tc_position[];
+out vec2 tc_texcoord[];
+out vec3 tc_normal[];
+
+uniform mat4 ModelMatrix;
+uniform vec3 camPos;
+
+uniform sampler2D dispTex;
+
+
+// don't tessellate very much, let displacement map alter resolution
+float tessDist(float dist0, float dist1)
+{
+    float avgDist = (dist0 + dist1) * .5f;
+
+    avgDist = .1f + (20.f / avgDist);
+
+    return max(min(avgDist, 3.f), 1.f);
+}
+
+
+void main()
+{
+    tc_position[gl_InvocationID] = vs_position[gl_InvocationID];
+    tc_texcoord[gl_InvocationID] = vs_texcoord[gl_InvocationID];
+    tc_normal[gl_InvocationID]   = vs_normal[gl_InvocationID];
+
+    // patch is facing away from camera
+    vec3 viewDir = (camPos -  (mat3(ModelMatrix) * (tc_position[0] + tc_position[1] + tc_position[2])/3.f));
+    vec3 faceNormal = mat3(ModelMatrix) * normalize(tc_normal[0] + tc_normal[1] + tc_normal[2]);
+    if (dot(viewDir, faceNormal) < -2.5f)
+    {
+        gl_TessLevelOuter[0] = 0.f;
+        gl_TessLevelOuter[1] = 0.f;
+        gl_TessLevelOuter[2] = 0.f;
+
+        // Inner tessellation resolution amplified based on displacement 
+        gl_TessLevelInner[0] = 0.f;
+    }
+    else
+    {
+        // Variation in displacement map at edges
+        mat3 disp_sample = mat3(0.f);
+        // corners
+        disp_sample[0][0] = texture2D(dispTex, tc_texcoord[0]).r;
+        disp_sample[0][1] = texture2D(dispTex, tc_texcoord[1]).r;
+        disp_sample[0][2] = texture2D(dispTex, tc_texcoord[2]).r;
+        // center of edges
+        vec2 edge1 = (tc_texcoord[0] + tc_texcoord[1]) * .5f; // faster than mix for midpoint
+        vec2 edge2 = (tc_texcoord[0] + tc_texcoord[2]) * .5f;
+        vec2 edge3 = (tc_texcoord[1] + tc_texcoord[2]) * .5f;
+        disp_sample[1][0] = texture2D(dispTex, edge1).r;
+        disp_sample[1][1] = texture2D(dispTex, edge2).r;
+        disp_sample[1][2] = texture2D(dispTex, edge3).r;
+
+        // points near center
+        disp_sample[2][0] = texture2D(dispTex, mix(tc_texcoord[0], edge3, .7f)).r;
+        disp_sample[2][1] = texture2D(dispTex, mix(tc_texcoord[1], edge2, .7f)).r;
+        disp_sample[2][2] = texture2D(dispTex, mix(tc_texcoord[2], edge1, .7f)).r;
+
+        vec3 edge_disp = vec3(0.f);
+
+        edge_disp.x = distance(disp_sample[0][1], disp_sample[0][2]);
+        edge_disp.x += distance(disp_sample[0][1], disp_sample[1][2]);
+        edge_disp.x += distance(disp_sample[0][2], disp_sample[1][2]);
+
+        edge_disp.y = distance(disp_sample[0][0], disp_sample[0][2]);
+        edge_disp.y += distance(disp_sample[0][0], disp_sample[1][1]);
+        edge_disp.y += distance(disp_sample[0][2], disp_sample[1][1]);
+
+        edge_disp.z = distance(disp_sample[0][0], disp_sample[0][1]);
+        edge_disp.z += distance(disp_sample[0][0], disp_sample[1][0]);
+        edge_disp.z += distance(disp_sample[0][1], disp_sample[1][0]);
+
+        edge_disp.x = max(min(edge_disp.x * 16.f, 16.f), 1.f);
+        edge_disp.y = max(min(edge_disp.y * 16.f, 16.f), 1.f);
+        edge_disp.z = max(min(edge_disp.z * 16.f, 16.f), 1.f);
+
+        float center_disp = texture2D(dispTex, (tc_texcoord[0] + tc_texcoord[1] + tc_texcoord[2])/3.f).r;
+
+        float tess_disp = 0.f;
+
+        for(int i = 0; i < 10; i++)
+            for(int j = 0; j < 10; j++)
+                if(i != j)
+                {
+                    if(i == 10)
+                        tess_disp += distance(center_disp, disp_sample[(j/3)%3][j%3]);
+                    else if(j == 10)
+                        tess_disp += distance(disp_sample[(i/3)%3][i%3], center_disp);
+                    else
+                        tess_disp += distance(disp_sample[(i/3)%3][i%3], disp_sample[(j/3)%3][j%3]);
+                }
+
+        tess_disp = max(min(tess_disp, 3.f), 1.f);
+
+
+        // Calculate the lod tesselation levels
+        float dist0 = distance(camPos, mat3(ModelMatrix) * vs_position[0]);
+        float dist1 = distance(camPos, mat3(ModelMatrix) * vs_position[1]);
+        float dist2 = distance(camPos, mat3(ModelMatrix) * vs_position[2]);
+
+
+        // Number of tessellation levels must match between patches to hide seams
+        gl_TessLevelOuter[0] = tessDist(dist1, dist2) * edge_disp.x;
+        gl_TessLevelOuter[1] = tessDist(dist2, dist0) * edge_disp.y;
+        gl_TessLevelOuter[2] = tessDist(dist0, dist1) * edge_disp.z;
+
+
+        // Inner tessellation resolution amplified based on displacement variation in center of the patch
+        gl_TessLevelInner[0] = tess_disp * (gl_TessLevelOuter[0] + gl_TessLevelOuter[1] + gl_TessLevelOuter[2])/3.f;
+    }
+}
