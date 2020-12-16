@@ -7,9 +7,9 @@
 High-res (10K textures) Earth assests  
 Specular, Ambient, and Diffuse lighting  
 Height mapping  
-Normal mapping
+Normal mapping  
 Shadow mapping  
-Night/Day Cycle
+Night/Day Cycle  
 LOD tesselation  
 Tesselation based on the complexity of the height-map texture  
 
